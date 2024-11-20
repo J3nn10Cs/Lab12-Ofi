@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
         await this.afAuth.createUserWithEmailAndPassword(user.email,user.password).then(data => {
           console.log(data);
 
-          this.navCtrl.navigateRoot("homer")
+          this.navCtrl.navigateRoot("home")
         })
       } catch (error : any) {
         error.message = "Usuario no registrado"

@@ -50,6 +50,7 @@ export class RegisterPage implements OnInit {
       } catch (error : any) {
         error.message = "Error al regsitrarse"
         let errorMessage = error.message || error.getLocalizedMessage()
+        console.log(error + 'hubo um ERRROR');
 
         //poput
         this.showToast(errorMessage)
@@ -60,8 +61,12 @@ export class RegisterPage implements OnInit {
   }
 
   formValidation(){
-    if(!this.user.email && !this.user.password){
-      this.showToast('Ingrese un email y contraseña');
+    if(!this.user.email ){
+      this.showToast('Ingrese un email');
+      return false
+    }
+    if(!this.user.password){
+      this.showToast('Ingrese un password');
       return false
     }
 
@@ -71,7 +76,7 @@ export class RegisterPage implements OnInit {
   showToast(message : string){
     this.toastCtrl.create({
       message : message,
-      duration: 40000
+      duration: 4000
     }).then(toastData => toastData.present())
   }
 
