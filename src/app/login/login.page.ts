@@ -33,13 +33,13 @@ export class LoginPage implements OnInit {
   async login(user : User){
     if(this.formValidation()){
       let loader = await this.loadingCtrl.create({
-        message : "Espere un momento por favor"
+        message : "Espere un momento por favor..."
       })
 
       await loader.present();
 
       try {
-        await this.afAuth.createUserWithEmailAndPassword(user.email,user.password).then(data => {
+        await this.afAuth.signInWithEmailAndPassword(user.email,user.password).then(data => {
           console.log(data);
 
           this.navCtrl.navigateRoot("home")
@@ -56,8 +56,12 @@ export class LoginPage implements OnInit {
   }
 
   formValidation(){
-    if(!this.user.email && !this.user.password){
-      this.showToast('Ingrese un email y contraseña');
+    if(!this.user.email ){
+      this.showToast('Ingrese un email');
+      return false
+    }
+    if(!this.user.password){
+      this.showToast('Ingrese un password');
       return false
     }
 
@@ -67,7 +71,7 @@ export class LoginPage implements OnInit {
   showToast(message : string){
     this.toastCtrl.create({
       message : message,
-      duration: 40000
+      duration: 5000
     }).then(toastData => toastData.present())
   }
 }

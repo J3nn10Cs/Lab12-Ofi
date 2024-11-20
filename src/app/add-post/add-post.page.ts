@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Post } from '../models/post.model';
 import {ToastController, LoadingController,NavController} from '@ionic/angular'
-import { User } from '../models/user.model';
 import {AngularFireAuth}  from '@angular/fire/compat/auth'
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss'],
+  selector: 'app-add-post',
+  templateUrl: './add-post.page.html',
+  styleUrls: ['./add-post.page.scss'],
 })
-export class RegisterPage implements OnInit {
+export class AddPostPage implements OnInit {
 
-  user = {} as User
+  post = {} as Post
 
   constructor(
     //sinbolo que carga
@@ -23,50 +24,44 @@ export class RegisterPage implements OnInit {
     private afAuth : AngularFireAuth,
 
     //Control para la navegacion
-    private navCtrl : NavController
-  ) { 
+    private navCtrl : NavController,
 
-  }
+    private firsestore : AngularFirestore
+  ) { }
 
   ngOnInit() {
   }
 
-  async register(user : User) {
+  async createPost(post : Post){
     if(this.formValidation()){
       let loader = await this.loadingCtrl.create({
-        message : 'Espere un momento...'
+        message : "Espere un momento por favor"
       })
 
       await loader.present()
 
       try {
-        //evaluar
-        await this.afAuth.createUserWithEmailAndPassword(user.email, user.password).then(data => {
-          console.log(data);
-
-          //mandamos al home
-          this.navCtrl.navigateRoot("home")
-        })
+        await this.firsestore.collection("posts").add(post)
       } catch (error : any) {
-        error.message = "Error al regsitrarse"
+        error.message = "Mensaje de error en post"
         let errorMessage = error.message || error.getLocalizedMessage()
-        console.log(error + 'hubo um ERRROR');
 
-        //poput
         this.showToast(errorMessage)
       }
 
       await loader.dismiss()
+
+      this.navCtrl.navigateRoot("home")
     }
   }
 
   formValidation(){
-    if(!this.user.email ){
-      this.showToast('Ingrese un email');
+    if(!this.post.title){
+      this.showToast('Ingrese un titulo');
       return false
     }
-    if(!this.user.password){
-      this.showToast('Ingrese un password');
+    if(!this.post.details){
+      this.showToast('Ingrese una descripcion');
       return false
     }
 
@@ -76,7 +71,7 @@ export class RegisterPage implements OnInit {
   showToast(message : string){
     this.toastCtrl.create({
       message : message,
-      duration: 4000
+      duration: 5000
     }).then(toastData => toastData.present())
   }
 
