@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../models/post.model';
 import {ToastController, LoadingController,NavController} from '@ionic/angular'
-import {AngularFireAuth}  from '@angular/fire/compat/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
@@ -19,9 +18,6 @@ export class AddPostPage implements OnInit {
 
     //muestra la carga
     private loadingCtrl : LoadingController,
-
-    //facotr de auth
-    private afAuth : AngularFireAuth,
 
     //Control para la navegacion
     private navCtrl : NavController,
@@ -42,6 +38,7 @@ export class AddPostPage implements OnInit {
 
       try {
         await this.firsestore.collection("posts").add(post)
+        this.navCtrl.navigateRoot("home")
       } catch (error : any) {
         error.message = "Mensaje de error en post"
         let errorMessage = error.message || error.getLocalizedMessage()
@@ -51,7 +48,6 @@ export class AddPostPage implements OnInit {
 
       await loader.dismiss()
 
-      this.navCtrl.navigateRoot("home")
     }
   }
 
@@ -64,7 +60,6 @@ export class AddPostPage implements OnInit {
       this.showToast('Ingrese una descripcion');
       return false
     }
-
     return true
   }
 
