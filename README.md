@@ -9,7 +9,7 @@
       ionic serve
    ```
 
-# Descripción del proyecto
+# Sugerencias del proyecto
 - Crear un proyecto en firebase.
 
 - Crear una colección llamada "users"
